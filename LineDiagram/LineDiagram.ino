@@ -24,20 +24,20 @@ void setup() {
 }
 
 void loop() {
-  float data[350];
-  fillRandomFloatArray(data, 350);
+  float data[100];
+  fillRandomFloatArray(data, 100);
 
   tft.setRotation(1);
 
   tft.fillScreen(BLACK);
 
-  drawPointDiagram(50, 20, 225, 125, data, 0, 350, -50, 50, 0xF456);
+  drawLineDiagram(50, 20, 225, 125, data, 0, 100, -50, 50, 0xF456);
 
   delay(5000);
 }
 
 //This needs more memory optimization. After stress-testing it seems to be able to handle ~400 data values in the array.
-void drawPointDiagram(uint16_t x, uint16_t y, uint16_t width, uint16_t height, float data[], uint16_t start, uint16_t end, float min, float max, uint16_t color){
+void drawLineDiagram(uint16_t x, uint16_t y, uint16_t width, uint16_t height, float data[], uint16_t start, uint16_t end, float min, float max, uint16_t color){
 
   //"Cleaning" some values:
   x = max(0,x);
@@ -85,25 +85,28 @@ void drawPointDiagram(uint16_t x, uint16_t y, uint16_t width, uint16_t height, f
     tft.print(value,1);
   }
 
+
+  int oldX = 0;
+  int oldY = 0;
+  int newX = 0;
+  int newY = 0;
   //iterating through data, drawing points on screen:
   for(uint16_t i = start; i<end; i++){
 
     // ( value-minimum ) / ( maximum-minimum )
     float relativePos = 1.0-(constrain((data[i]-min)/(max-min),0.0,1.0));
 
-    tft.fillCircle(
-      /* 
-      x + 1 is the starting position.
-      (int) turns everything in the next parantheses into an integer, essentially cutting off the decimal point. This is why you have (+0.5) at the end, so it essentially acts as rounding.
-      (float) turns the next parantheses, (i-start) into floating point numbers, allowing for precise calculation.
-      (i - start)*(width - 2) is basically the position of the point. width has subtracted 2 in order to cut off 2 pixels.
-      / (end-start) is how long the graph is, it needs to divide to see how much space should be between each point.
-      */
-      x + 1 + (int)(((float)(i - start) * (width - 2)) / ((end - start) - 1) + 0.5),
-      y+7+((height-10)*relativePos),
-      1,
-      color
-    );
+    if(i == 0){
+      newX = x + 1 + (int)(((float)(i - start) * (width - 2)) / ((end - start) - 1) + 0.5);
+      newY = y+7+((height-10)*relativePos);
+    }else{
+      oldX = newX;
+      oldY = newY;
+      newX = x + 1 + (int)(((float)(i - start) * (width - 2)) / ((end - start) - 1) + 0.5);
+      newY = y+7+((height-10)*relativePos);
+
+      tft.drawLine(oldX,oldY,newX,newY,color);
+    }
   }
 
   //drawing bounding box:
