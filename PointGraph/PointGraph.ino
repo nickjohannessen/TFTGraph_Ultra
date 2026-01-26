@@ -12,7 +12,7 @@ Adafruit_TFTLCD tft;
 
 void fillRandomFloatArray(float arr[], uint16_t size) {
   for (uint16_t i = 0; i < size; i++) {
-    arr[i] = sin(i/10.0)*50;
+    arr[i] = sin(i/10.0)*200;
   }
 }
 
@@ -29,7 +29,7 @@ void loop() {
 
   tft.fillScreen(BLACK);
 
-  drawPointDiagram(30, 20, 200, 64, data, 0, 200, 0xF456);
+  drawPointDiagram(55, 20, 175, 75, data, 0, 200, 0xF456);
 
   delay(5000);
 }
@@ -54,6 +54,26 @@ void drawPointDiagram(uint16_t x, uint16_t y, uint16_t width, uint16_t height, f
     }
   }
 
+  uint8_t lines = (height / 15) + 1;
+  for(uint8_t i = 0; i < lines ; i++){
+    int yPos = y + i * 15;
+    if (yPos > y + height){
+      break;
+    }
+
+    tft.drawFastHLine(x,y+(i*15),width, GRAY);
+
+    float value = max_num - ((float)i / (lines - 1)) * (max_num - min_num);
+
+    String str = String(value,1);
+
+    tft.setCursor((x - 3)-(6*str.length()), (y+(i*15))-4);
+    tft.setTextColor(WHITE);
+    tft.setTextSize(1);
+    tft.print(value,1);
+  }
+
+  /*
   //CHATGPT CODE, REPLACE LATER!!!111!!!:
   uint8_t lineCount = height / 15; // or however many lines you want
 for (uint8_t i = 0; i <= lineCount; i++) {
@@ -70,6 +90,8 @@ for (uint8_t i = 0; i <= lineCount; i++) {
     tft.setTextSize(1);
     tft.print(lineValue);           // 1 decimal place
 }
+
+*/
 
   //iterating through data, drawing points on screen:
   for(uint16_t i = start; i<end; i++){
