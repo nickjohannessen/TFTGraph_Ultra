@@ -12,7 +12,7 @@ Adafruit_TFTLCD tft;
 
 void fillRandomFloatArray(float arr[], uint16_t size) {
   for (uint16_t i = 0; i < size; i++) {
-    arr[i] = sin(i/10.0)*50;
+    arr[i] = sin(i/3.0)*50;
   }
 }
 
@@ -31,7 +31,7 @@ void loop() {
 
   tft.fillScreen(BLACK);
 
-  drawLineDiagram(50, 20, 225, 125, data, 0, 100, -50, 50, 0xF456);
+  drawLineDiagram(50, 20, 225, 125, data, 0,50, -50, 50, 0xF456);
 
   delay(5000);
 }
@@ -49,22 +49,6 @@ void drawLineDiagram(uint16_t x, uint16_t y, uint16_t width, uint16_t height, fl
 
   /*tft.drawFastVLine(x-2,y-2,height+6,WHITE);
   tft.drawFastVLine(x-3,y-2,height+6,WHITE);*/
-
-  /*
-  //retrieving the highest and lowest number in the array:
-  float max_num = data[start];
-  float min_num = data[start];
-  for(uint16_t i = start; i<end; i++){
-    if(max_num < data[i]){
-      max_num = data[i];
-      continue;
-    } else if(min_num > data[i]){
-      min_num = data[i];
-    }else{
-      continue;
-    }
-  }
-  */
 
   uint8_t lines = (height / 15) + 1;
   for(uint8_t i = 0; i < lines ; i++){
@@ -96,7 +80,7 @@ void drawLineDiagram(uint16_t x, uint16_t y, uint16_t width, uint16_t height, fl
     // ( value-minimum ) / ( maximum-minimum )
     float relativePos = 1.0-(constrain((data[i]-min)/(max-min),0.0,1.0));
 
-    if(i == 0){
+    if(i == start){
       newX = x + 1 + (int)(((float)(i - start) * (width - 2)) / ((end - start) - 1) + 0.5);
       newY = y+7+((height-10)*relativePos);
     }else{
@@ -106,6 +90,7 @@ void drawLineDiagram(uint16_t x, uint16_t y, uint16_t width, uint16_t height, fl
       newY = y+7+((height-10)*relativePos);
 
       tft.drawLine(oldX,oldY,newX,newY,color);
+      tft.drawLine(oldX,oldY-1,newX,newY-1,color);
     }
   }
 
