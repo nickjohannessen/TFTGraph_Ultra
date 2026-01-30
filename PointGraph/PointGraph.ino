@@ -1,6 +1,7 @@
 #include <math.h>
 #include <Adafruit_GFX.h>
 #include <Adafruit_TFTLCD.h>
+#include <TFTGraph.h>
 
 #define BLACK 0x0000
 #define WHITE 0xFFFF
@@ -31,81 +32,7 @@ void loop() {
 
   tft.fillScreen(BLACK);
 
-  drawPointDiagram(50, 20, 225, 125, data, 0, 350, -50, 50, 0xF456);
+  drawPointDiagram(tft,50, 20, 225, 125, data, 0, 350, -50, 50, 0xF456);
 
   delay(5000);
-}
-
-//This needs more memory optimization. After stress-testing it seems to be able to handle ~400 data values in the array.
-void drawPointDiagram(uint16_t x, uint16_t y, uint16_t width, uint16_t height, float data[], uint16_t start, uint16_t end, float min, float max, uint16_t color){
-
-  //"Cleaning" some values:
-  x = max(0,x);
-  y = max(0,y);
-  width = max(5,width);
-  height = max(5,height);
-  start = min(start, end);
-  min = min(min, max);
-
-  /*tft.drawFastVLine(x-2,y-2,height+6,WHITE);
-  tft.drawFastVLine(x-3,y-2,height+6,WHITE);*/
-
-  /*
-  //retrieving the highest and lowest number in the array:
-  float max_num = data[start];
-  float min_num = data[start];
-  for(uint16_t i = start; i<end; i++){
-    if(max_num < data[i]){
-      max_num = data[i];
-      continue;
-    } else if(min_num > data[i]){
-      min_num = data[i];
-    }else{
-      continue;
-    }
-  }
-  */
-
-  uint8_t lines = (height / 15) + 1;
-  for(uint8_t i = 0; i < lines ; i++){
-    int yPos = y + i * 15;
-    if (yPos > y + height){
-      break;
-    }
-
-    tft.drawFastHLine(x,y+(i*15),width, GRAY);
-
-    float value = max - ((float)i / (lines - 1)) * (max - min);
-
-    String str = String(value,1);
-
-    tft.setCursor((x - 3)-(6*str.length()), (y+(i*15))-4);
-    tft.setTextColor(WHITE);
-    tft.setTextSize(1);
-    tft.print(value,1);
-  }
-
-  //iterating through data, drawing points on screen:
-  for(uint16_t i = start; i<end; i++){
-
-    // ( value-minimum ) / ( maximum-minimum )
-    float relativePos = 1.0-(constrain((data[i]-min)/(max-min),0.0,1.0));
-
-    tft.fillCircle(
-      /* 
-      x + 1 is the starting position.
-      (int) turns everything in the next parantheses into an integer, essentially cutting off the decimal point. This is why you have (+0.5) at the end, so it essentially acts as rounding.
-      (float) turns the next parantheses, (i-start) into floating point numbers, allowing for precise calculation.
-      (i - start)*(width - 2) is basically the position of the point. width has subtracted 2 in order to cut off 2 pixels.
-      / (end-start) is how long the graph is, it needs to divide to see how much space should be between each point.
-      */
-      x + 1 + (int)(((float)(i - start) * (width - 2)) / ((end - start) - 1) + 0.5),
-      y+7+((height-10)*relativePos),
-      1,
-      color
-    );
-  }
-
-  //drawing bounding box:
-  tft.drawRect(x,y,width+2,height,WHITE);
 }

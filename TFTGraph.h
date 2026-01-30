@@ -1,18 +1,13 @@
-#ifndef TFTGraph_h
-#define TFTGraph_h
+#ifndef TFTGRAPH_H
+#define TFTGRAPH_H
 
 #include "Arduino.h"
+#include "Adafruit_GFX.h"
 
-class TFTGraph {
+void drawPointDiagram(Adafruit_GFX &gfx, uint16_t x, uint16_t y, uint16_t width, uint16_t height, float data[], uint16_t start, uint16_t end, float min, float max, uint16_t color);
 
-    //This is all just a bunch of junk variables that don't mean anything:a
-    public:
-        Morse(int pin);
-        void begin();
-        void dot();
-        void dash();
-    private:
-        int _pin;
-}
+void drawLineDiagram(Adafruit_GFX &gfx, uint16_t x, uint16_t y, uint16_t width, uint16_t height, float data[], uint16_t start, uint16_t end, float min, float max, uint16_t color);
+
+void drawGauge(Adafruit_GFX &gfx,uint16_t x, uint16_t y, uint8_t r, float value, float min, float max, uint16_t color);
 
 #endif
