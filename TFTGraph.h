@@ -10,4 +10,6 @@ void drawLineDiagram(Adafruit_GFX &gfx, uint16_t x, uint16_t y, uint16_t width, 
 
 void drawGauge(Adafruit_GFX &gfx,uint16_t x, uint16_t y, uint8_t r, float value, float min, float max, uint16_t color);
 
+void drawPieChart(Adafruit_GFX &gfx,int x, int y, uint8_t r, float data[], int start, int end, uint16_t colors[]);
+
 #endif
