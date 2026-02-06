@@ -17,9 +17,17 @@ void setup(){
 
 void loop(){
   tft.fillScreen(BLACK);
-  float data[] = {5,45,4,1,6};
+  float data[] = {5,45,4,1,6,67};
   int dataSize = sizeof(data) / sizeof(data[0]);
   uint16_t colors[] = {0xf800, 0xfca0, 0xefe0, 0x5fe0, 0x07fe, 0x201f, 0x0393, 0x9800, 0xf800};
-  drawPieChart(tft,160, 100, 64, data, 0, dataSize, colors);
-  delay(10000);
+  char names[][15] = {
+    "bruh",
+    "Prump",
+    "gah",
+    "Joe",
+    "Fah rahhh",
+    "Schredvig"
+  };
+  drawPieChart(tft,120, 100, 64, data, 0, dataSize, colors, names);
+  delay(100000);
 }
