@@ -93,10 +93,6 @@ static double cosd(double deg) {
 
 void drawPointDiagram(Adafruit_GFX &gfx, uint16_t x, uint16_t y, uint16_t width, uint16_t height, float data[], uint16_t start, uint16_t end, float min, float max, uint16_t color){
   //"Cleaning" some values:
-  x = max(0,x);
-  y = max(0,y);
-  width = max(5,width);
-  height = max(5,height);
   start = min(start, end);
   min = min(min, max);
 
@@ -109,7 +105,7 @@ void drawPointDiagram(Adafruit_GFX &gfx, uint16_t x, uint16_t y, uint16_t width,
     float relativePos = 1.0-(constrain((data[i]-min)/(max-min),0.0,1.0));
 
     gfx.fillCircle(
-      /* 
+      /*
       x + 1 is the starting position.
       (int) turns everything in the next parantheses into an integer, essentially cutting off the decimal point. This is why you have (+0.5) at the end, so it essentially acts as rounding.
       (float) turns the next parantheses, (i-start) into floating point numbers, allowing for precise calculation.
@@ -262,4 +258,40 @@ void drawPieChart(Adafruit_GFX &gfx,int x, int y, uint8_t r, float data[], int s
 	}
 	//draw bounding circle:
 	//gfx.drawCircle(x,y,r,0xFFFF);
+}
+
+void drawBarChart(Adafruit_GFX &gfx, uint16_t x, uint16_t y, uint16_t width, uint16_t height, float data[], float start, float end, uint16_t color){
+
+  start = min(start, end);
+
+  //determing maximum and minimum number:
+  float max = data[0];
+  float min = 0;
+  for(int i = start; i<(end-start); i++){
+    if(data[i] > max){
+      max = data[i];
+    }else if(data[i] < min){
+      min = data[i];
+    }
+  }
+
+  //add 10% padding if bar chart goes below 0 (to avoid the minimum value bar simply not rendering)
+  if(min < 0){
+    min -= (max-min)*0.1;
+  }
+
+  drawDiagramBody(gfx, x, y, width, height, min,max);
+
+  //iterating through data values:
+  for(int i = start; i<end; i++){
+    float relativePos = 1.0-(constrain((data[i]-min)/(max-min),0.0,1.0));
+
+    gfx.fillRect(
+      x + (i * (width / (end-start))),
+      y+7+((height-10)*relativePos),
+      (width / (end-start))*0.6,
+      (y + height-1) - (y+7+((height-10)*relativePos)),
+      color
+    );
+  }
 }

@@ -1,5 +1,4 @@
 #include <math.h>
-#include <Adafruit_GFX.h>
 #include <Adafruit_TFTLCD.h>
 #include <TFTGraph.h>
 
