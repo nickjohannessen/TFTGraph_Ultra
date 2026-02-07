@@ -10,6 +10,7 @@
 #define DARKGRAY 0x4208
 
 Adafruit_TFTLCD tft;
+TFTGraph gfx(tft);
 
 void setup() {
   tft.begin(0x9325);
@@ -23,7 +24,7 @@ void loop() {
 
   tft.fillScreen(BLACK);
 
-  drawGauge(tft,320/2, 150, 128, 145, -400, 360, 0xF456);
+  gfx.drawGauge(320/2, 150, 128, 145, -400, 360, 0xF456);
 
   delay(1000);
 }

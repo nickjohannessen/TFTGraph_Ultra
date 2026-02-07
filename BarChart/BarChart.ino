@@ -8,19 +8,20 @@
 #define GRAY 0x8410
 #define DARKGRAY 0x4208
 
-Adafruit_TFTLCD tft;
+Adafruit_TFTLCD gfx;
+TFTGraph tft(gfx);
 
 void setup() {
-  tft.begin(0x9325);
-  tft.reset();
-  tft.setRotation(1);
+  gfx.begin(0x9325);
+  gfx.reset();
+  gfx.setRotation(1);
 
-  tft.fillScreen(BLACK);
+  gfx.fillScreen(BLACK);
 }
 
 void loop() {
-  tft.fillScreen(BLACK);
+  gfx.fillScreen(BLACK);
   float data[] = {5,10,20,10,67,65,32,54};
-  drawBarChart(tft,25, 15, 200, 200, data, 0,sizeof(data)/sizeof(data[0]), 0xFF45);
+  tft.drawBarChart(40, 15, 270, 190, data, 0,sizeof(data)/sizeof(data[0]), 0xFF45);
   delay(10000);
 }

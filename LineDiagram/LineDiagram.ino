@@ -10,6 +10,7 @@
 #define DARKGRAY 0x4208
 
 Adafruit_TFTLCD tft;
+TFTGraph gfx(tft);
 
 void fillRandomFloatArray(float arr[], uint16_t size) {
   for (uint16_t i = 0; i < size; i++) {
@@ -32,7 +33,7 @@ void loop() {
 
   tft.fillScreen(BLACK);
 
-  drawLineDiagram(tft,50, 20, 225, 125, data, 0,10, -50, 50, 0xF456);
+  gfx.drawLineDiagram(50, 20, 225, 125, data, 0,10, -50, 50, 0xF456);
 
-  delay(100);
+  delay(1000);
 }
